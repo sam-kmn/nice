@@ -1,0 +1,2 @@
+const Btn = (props) => <button {...props} className={`flex flex-row gap-2 justify-center items-center bg-inherit px-3 py-1 border rounded-lg hover:scale-110 transition duration-300  ${props.className}`}>{props.children}</button>
+export default Btn
