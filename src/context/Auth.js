@@ -8,10 +8,16 @@ export const AuthProvider = ({children}) => {
   const [currentUser, setCurrentUser] = useState()
   const [loading, setLoading] = useState(true)
 
+  const signIn = async (email, password) => {
+    await auth.signInWithEmailAndPassword(email, password)
+  }
+
   const signUp = async (name, email, password) => {
     const response = await auth.createUserWithEmailAndPassword(email, password)
     await response.user.updateProfile({displayName: name})
   }
+
+  const signOut = () => auth.signOut()
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( user => {
@@ -24,7 +30,7 @@ export const AuthProvider = ({children}) => {
   
 
   const value = {
-    currentUser, signUp
+    currentUser, signUp, signOut, signIn
   }
   return (
     <AuthContext.Provider value={value}>
