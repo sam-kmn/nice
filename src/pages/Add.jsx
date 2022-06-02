@@ -28,8 +28,9 @@ const Add = () => {
   const deleteTag = (tag) => setTags(tags.filter(t => t !== tag))
   const submitTag = (event) => {
     event.preventDefault()
-    if (!tags.includes(tagRef.current.value))
-      return addTag(tagRef.current.value)
+    const tag = tagRef.current.value
+    if (!tags.includes(tag) && tag )
+      return addTag(tag.toLowerCase())
   }
 
 
@@ -61,50 +62,61 @@ const Add = () => {
     });
 
     setLoading(false)
-    alert('Image uploaded')
+    // alert('Image uploaded')
     navigate('/', {replace: true})
   }
 
   return (
-    <form onSubmit={upload} className="flex flex-col justify-center items-center gap-4 mt-10">
+    <div className="flex flex-row justify-center items-center h-full p-3">
+      <div className="flex flex-col items-center justify-center md:flex-row md:items-start gap-4 max-w-4xl">
 
+        {/* Image */}
+        { image && <img src={preview} className='w-full sm:w-1/2 h-auto object-cover rounded-md' alt="Preview" />}
 
-      <div className="flex flex-row justify-center items-center">
-        <input type="file" onChange={event => setImage(event.target.files[0])} className='block w-full text-sm text-slate-500
-          file:mr-4 file:py-2 file:px-4
-          file:rounded-full file:border-0
-          file:text-sm file:font-semibold
-          file:bg-teal-50 file:text-teal-700
-          hover:file:bg-teal-100'/>
+        {/* Details */}
+        <div className="flex-1 flex flex-col gap-3 w-full">
+          {/* Input Upload */}
+          <form onSubmit={upload} className="flex flex-row justify-center items-center">
+            <input type="file" onChange={event => setImage(event.target.files[0])} className='block w-full text-sm text-slate-500
+              file:mr-4 file:py-2 file:px-4
+              file:rounded-full file:border-0
+              file:text-sm file:font-semibold
+              file:bg-teal-50 file:text-teal-700
+              hover:file:bg-teal-100'/>
+            {image && !loading && <button className="py-2 px-4 rounded-full bg-teal-600 text-white font-semibold" type="submit">Upload</button>}
+          </form>
 
-        {image && !loading && <button className="py-2 px-4 rounded-full bg-teal-600 text-white font-semibold" type="submit">Upload</button>}
-      </div>
-      
-      { image && <>
-        <img src={preview} className='w-96 h-96 object-cover rounded-md' alt="Preview" />
-        <input type="text" required ref={title} placeholder='Description' className="text-center text-xl" />
-        <div className="flex flex-col gap-5 w-80">
-          
-          <div className="flex flex-row gap-3 items-center flex-wrap">
-            {tags && tags.map(tag => 
-              <div key={tag} className='flex h-7 items-center justify-between text-white bg-gray-500 rounded-full'>
-                
-                <div className="px-2"><span className="text-gray-400">#</span>{tag}</div> 
-                
-                <button onClick={() => deleteTag(tag)}><IoClose className="bg-gray-600 w-7 h-auto p-1 rounded-full" /></button>
-              </div> )}
+          {/* Description */}
+          { image && (<>
+          <input type="text" required ref={title} placeholder='Description' className="px-5 py-2 text-xl bg-zinc-100 rounded-full" />
+
+          {/* Tags */}
+          <div className="flex flex-col gap-5 flex-1">
+
+            {/* Tag Input */}
+            <form onSubmit={submitTag} className="flex items-center justify-center">
+              <input type="text" ref={tagRef} placeholder='Tags (optional)' className="flex-1 px-5 py-2 bg-zinc-100 lowercase rounded-l-full" />
+              <button type="submit" className="px-3 py-2 bg-zinc-400 text-white rounded-r-full flex justify-center items-center"><HiPlus className="" /> Add</button>
+            </form> 
+
+            {/* Tags Map */}
+            {tags.length > 0 ? (
+            <div className="flex flex-row gap-3 items-center flex-wrap px-3 ">
+              {tags.map(tag => 
+                <div key={tag} className='flex h-7 items-center justify-between text-black bg-zinc-200 rounded-full'>
+                  <div className="px-2"><span className="text-gray-500">#</span>{tag}</div> 
+                  <button onClick={() => deleteTag(tag)}><IoClose className="bg-gray-300 w-7 h-auto p-1 rounded-full" /></button>
+                </div> 
+              )}
+            </div>
+            ): <div className="text-zinc-500 px-2">We recommend to apply tags. Your post will be more accessible in search results</div> }
           </div>
 
-          <div className="flex items-center justify-center ">
-            <input type="text" ref={tagRef} placeholder='Tags (optional)' className="text-center  bg-zinc-100 rounded-l-full px-3 py-1" />
-            <button onClick={submitTag} className="bg-teal-600 text-white rounded-r-full flex justify-center items-center px-3 py-1"><HiPlus className="" /> Add</button>
-          </div> 
-
+          </>)}
         </div>
-      </>}
 
-      <div className="text-center text-zinc-400 mt-10">Image preview aspect ratio is square only,<br />Your image will be uploaded with original aspect ratio</div>
-    </form>
+      </div>
+    </div>
   )
 }
 
