@@ -1,40 +1,50 @@
-import { NavLink } from "react-router-dom"
+import { NavLink, Link } from "react-router-dom"
 import useAuth from "../context/Auth"
-import HomeIcon from "./Icons/Home"
-import UserIcon from "./Icons/User"
-import AddIcon from "./Icons/Add"
 import Btn from "./Btn"
+import {HiOutlineUserCircle} from 'react-icons/hi'
+import {CgSearch} from 'react-icons/cg'
+// import {GrAdd} from 'react-icons/gr'
+import {HiPlus} from 'react-icons/hi'
+import {IoMdLogOut} from 'react-icons/io'
 
 const Navbar = () => {
   const {currentUser, signOut} = useAuth()
   const activeNavLink = ({isActive}) => isActive ? 'text-green-700': 'text-black'
   
   return (
-    <div className="bg-zinc-100 py-3">
-      <nav className="container mx-auto px-3 flex flex-row justify-between">
-        <div className="text-3xl font-semibold">Nice.</div>
-        <div className="flex flex-row gap-3">
-          
-          <NavLink to={'/add'} className={activeNavLink}>
-            <Btn className={'border-0 hover:bg-gray-100 rounded-full !p-2'}><AddIcon/></Btn>
-          </NavLink>
+    <nav className="flex flex-row items-center gap-4 h-20 px-5 py-4 font-semibold !w-screen">
 
-          <NavLink to={'/'} className={activeNavLink}>
-            <Btn className={'border-0 hover:bg-gray-100 rounded-full !p-2'}><HomeIcon/></Btn>
-          </NavLink>
-          
-          { currentUser && (<>
+      <Link to={'/'} className='flex-none'>
+        <img src="nice.png" alt="" className='h-12 w-12' />
+      </Link>
+        
+      <NavLink to={'/'} className={ ({isActive}) => isActive ? 'bg-black text-white h-full justify-center items-center rounded-full px-4 hidden md:flex' : 'bg-white text-black px-4 hidden md:block'} >
+        Home page
+      </NavLink>
+
+      <NavLink to={'/add'} className={'flex justify-center items-center gap-1'}>
+        <div className='hidden sm:block'>Create</div> <HiPlus />
+      </NavLink>
+
+      <div className="flex-1 flex justify-center items-center gap-2 bg-zinc-100 h-full px-3 rounded-full">
+        <CgSearch className="text-2xl text-gray-500"  />
+        <input type="search" className="flex-1 px-2 mr-4 h-full bg-inherit" placeholder='Search' />
+
+      </div>
+
+      
+      { currentUser && (
+        <div className='flex justify-end '>
           <NavLink to={'/profile'} className={activeNavLink}>
-            <Btn className={'border-0 hover:bg-gray-100 rounded-full !p-2'}><UserIcon/></Btn>
+            <Btn className={'border-0 hover:bg-gray-100 rounded-full !p-2'}><HiOutlineUserCircle className="text-3xl text-gray-700" /></Btn>
           </NavLink>
-          
-          <Btn onClick={signOut} className='border-0'>Log out</Btn>
-          </>)
 
-          }
+          <Btn onClick={signOut} className='border-0 hover:bg-gray-100 rounded-full !p-2'> <IoMdLogOut className='text-3xl text-gray-700' /></Btn>
+       
         </div>
-      </nav>
-    </div>
+      )}
+
+    </nav>
   )
 }
 

@@ -9,17 +9,18 @@ import PrivateRoute from './components/PrivateRoute';
 import Register from './pages/Register';
 import Navbar from './components/Navbar'
 import Login from './pages/Login';
-import Place from './pages/Place';
+import Post from './pages/Post';
 import Home from './pages/Home';
 import Add from './pages/Add';
 
 const Layout = () => {
-  return (<>
+  return (
+  <div className='flex flex-col h-screen'>
     <Navbar />
-    <div className='container mx-auto px-3'>
+    <div className='flex-1 container mx-auto px-3'>
       <Outlet />
     </div>
-  </>)
+  </div>)
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -43,7 +44,7 @@ root.render(
             </Route>
 
             <Route path='i' element={<PrivateRoute />}>
-              <Route path=':id' element={<Place />} />
+              <Route path=':id' element={<Post />} />
             </Route>
 
           </Route>

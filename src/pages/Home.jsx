@@ -36,7 +36,7 @@ const Home = () => {
   
 
   return (
-    <div className='py-4 columns-1 sm:columns-2 lg:columns-3 xl:columns-4 space-y-3'>
+    <div className='columns-1 sm:columns-2 lg:columns-3 xl:columns-4 space-y-3'>
       {posts.length ? posts.map(post => 
         (<div key={post.id} className='relative group break-inside-avoid-column'>
           <Link to={'/i/'+post.id}>
@@ -46,8 +46,8 @@ const Home = () => {
               <div className='flex justify-between items-center px-3 '>
                 <div className='text-lg font-semibold'>@{post.user}</div>
                 <div className='flex flex-row gap-3 justify-center items-center text-black bg-white px-4 py-2 rounded-full'>
-                  10 <LikeIcon className={'hover:text-emerald-600 hover:scale-125 transition duration-200'} />
-                  1 <DislikeIcon className={'hover:text-red-600 hover:scale-125 transition duration-200'} />
+                  {Object.values(post.likes).filter(i => i).length} <LikeIcon className={'hover:text-emerald-600 hover:scale-125 transition duration-200'} />
+                  {Object.values(post.likes).filter(i => !i).length} <DislikeIcon className={'hover:text-red-600 hover:scale-125 transition duration-200'} />
                 </div>
               </div>
               
