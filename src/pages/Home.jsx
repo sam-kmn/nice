@@ -1,18 +1,22 @@
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 
 import { storage, database } from '../firebase'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { collection, getDocs } from "firebase/firestore";
 
-import LikeIcon from '../components/Icons/Like'
-import DislikeIcon from '../components/Icons/Dislike'
+import Spinner from '../components/Spinner'
+import PostGallery from '../components/PostGallery';
+
+const Loading = () => (
+  <div className='h-full flex justify-center items-center'>
+    <Spinner />
+  </div>
+)
 
 const Home = () => {
 
   const [posts, setPosts] = useState([])
-
-  useEffect(() => console.log(posts), [posts])
+  const [loading, setLoading] = useState(true)
 
   const fetchURL = async (id) => {
     const postRef = ref(storage, 'images/'+id)
@@ -30,34 +34,13 @@ const Home = () => {
           else return [...prev, {...post.data(), url: url, id: post.id}]
         })
       })
+      setLoading(false)
     }
     fetchPosts()
   }, [])
   
 
-  return (
-    <div className='columns-1 sm:columns-2 lg:columns-3 xl:columns-4 space-y-3'>
-      {posts.length ? posts.map(post => 
-        (<div key={post.id} className='relative group break-inside-avoid-column'>
-          <Link to={'/i/'+post.id}>
-            <img className='rounded-lg group-hover:brightness-50' src={post.url} alt='test' />
-            <nav className='invisible group-hover:visible absolute inset-0 p-2 text-white flex flex-col justify-between'>
-              <div className='text-lg font-semibold text-center'>{post.title}</div>
-              <div className='flex justify-between items-center px-3 '>
-                <div className='text-lg font-semibold'>@{post.user}</div>
-                <div className='flex flex-row gap-3 justify-center items-center text-black bg-white px-4 py-2 rounded-full'>
-                  {Object.values(post.likes).filter(i => i).length} <LikeIcon className={'hover:text-emerald-600 hover:scale-125 transition duration-200'} />
-                  {Object.values(post.likes).filter(i => !i).length} <DislikeIcon className={'hover:text-red-600 hover:scale-125 transition duration-200'} />
-                </div>
-              </div>
-              
-            </nav>
-          </Link>
-        </div>)) 
-        : <div>No images</div>
-      }
-    </div>
-  )
+  return loading ? <Loading /> : <PostGallery posts={posts} />
 }
 
 export default Home
