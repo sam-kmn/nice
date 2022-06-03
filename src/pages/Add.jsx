@@ -10,6 +10,7 @@ import { v4 } from "uuid"
 import dayjs from "dayjs"
 import {HiPlus} from 'react-icons/hi'
 import {IoClose} from 'react-icons/io5'
+import Spinner from '../components/Spinner'
 
 const Add = () => {
   
@@ -29,8 +30,9 @@ const Add = () => {
   const submitTag = (event) => {
     event.preventDefault()
     const tag = tagRef.current.value
-    if (!tags.includes(tag) && tag )
-      return addTag(tag.toLowerCase())
+    if (tags.includes(tag) || !tag ) return
+    addTag(tag.toLowerCase())
+    tagRef.current.value = ''
   }
 
 
@@ -83,20 +85,23 @@ const Add = () => {
               file:text-sm file:font-semibold
               file:bg-teal-50 file:text-teal-700
               hover:file:bg-teal-100'/>
-            {image && !loading && <button className="py-2 px-4 rounded-full bg-teal-600 text-white font-semibold" type="submit">Upload</button>}
+            {image && loading ? 
+              <Spinner className='text-teal-600' />
+              : <button className="py-2 px-4 rounded-full bg-teal-600 text-white font-semibold" type="submit">Upload</button>
+            }
           </form>
 
           {/* Description */}
           { image && (<>
-          <input type="text" required ref={title} placeholder='Description' className="px-5 py-2 text-xl bg-zinc-100 rounded-full" />
+          <input type="text" required ref={title} placeholder='Description' disabled={loading} className="px-5 py-2 text-xl bg-zinc-100 rounded-full" />
 
           {/* Tags */}
-          <div className="flex flex-col gap-5 flex-1">
+          <div className="flex flex-col gap-5 flex-1" >
 
             {/* Tag Input */}
             <form onSubmit={submitTag} className="flex items-center justify-center">
-              <input type="text" ref={tagRef} placeholder='Tags (optional)' className="flex-1 px-5 py-2 bg-zinc-100 lowercase rounded-l-full" />
-              <button type="submit" className="px-3 py-2 bg-zinc-400 text-white rounded-r-full flex justify-center items-center"><HiPlus className="" /> Add</button>
+              <input type="text" ref={tagRef} placeholder='Tags (optional)' disabled={loading} className="flex-1 px-5 py-2 bg-zinc-100 lowercase rounded-l-full" />
+              <button type="submit" disabled={loading} className="px-3 py-2 bg-zinc-400 text-white rounded-r-full flex justify-center items-center"><HiPlus className="" /> Add</button>
             </form> 
 
             {/* Tags Map */}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { database, storage } from '../firebase'
 import { doc, getDoc } from "firebase/firestore"
@@ -47,7 +47,7 @@ const Post = () => {
             <div className="p-4 w-full flex flex-col justify-between">
               <div>
                 <div className='text-2xl lg:text-3xl'>{data.title}</div>
-                <div>Uploaded by <span className='font-semibold text-teal-500'>{data.user}</span></div>
+                <div>Uploaded by <Link to={'/u/'+data.user} className='font-semibold text-teal-500'>{data.user}</Link></div>
               
               { data.tags && (
                 <div className='flex flex-row gap-3 items-center flex-wrap my-3'>

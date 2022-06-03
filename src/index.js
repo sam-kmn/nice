@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Post from './pages/Post';
 import Home from './pages/Home';
 import Add from './pages/Add';
+import User from './pages/User';
 
 const Layout = () => {
   return (
@@ -39,8 +40,8 @@ root.render(
               <Route index element={<Add />} />
             </Route>
 
-            <Route path='profile' element={<PrivateRoute />}>
-              <Route index element={<Add />} />
+            <Route path='u' element={<PrivateRoute />}>
+              <Route path=':uid' element={<User />} />
             </Route>
 
             <Route path='i' element={<PrivateRoute />}>
