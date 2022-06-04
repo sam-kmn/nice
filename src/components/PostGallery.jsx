@@ -1,7 +1,5 @@
 import { Link } from 'react-router-dom'
-import {HiThumbUp, HiThumbDown} from 'react-icons/hi'
-
-import React from 'react'
+import Likes from './Likes'
 
 const PostGallery = ({posts}) => {
   return (
@@ -14,12 +12,8 @@ const PostGallery = ({posts}) => {
               <div className='text-lg font-semibold text-center'>{post.title}</div>
               <div className='flex justify-between items-center px-3 '>
                 <div className='text-lg font-semibold'>@{post.user}</div>
-                <div className='flex flex-row gap-3 justify-center items-center text-black bg-white px-4 py-2 rounded-full'>
-                  {Object.values(post.likes).filter(i => i).length} <HiThumbUp className={'text-lg hover:text-emerald-600 hover:scale-125 transition duration-200'} />
-                  {Object.values(post.likes).filter(i => !i).length} <HiThumbDown className={'text-lg hover:text-red-600 hover:scale-125 transition duration-200'} />
-                </div>
+                <Likes id={post.id} /> 
               </div>
-              
             </nav>
           </Link>
         </div>))}

@@ -1,27 +1,35 @@
-import {HiThumbUp, HiThumbDown} from 'react-icons/hi'
+import { useEffect, useState } from 'react';
+import useAuth from '../context/Auth'
+import { database } from '../firebase'
+import { doc, setDoc, onSnapshot} from "firebase/firestore";
+import {RiHeartFill, RiHeartLine} from 'react-icons/ri'
 
-export const Like = ({className}) => {
+const Likes = ({className, id}) => {
+
+  const {currentUser} = useAuth()
+  const [likes, setLikes] = useState([])
+
+  useEffect(() => {
+    const unsub = onSnapshot(doc(database, "posts", id), doc => setLikes(doc.data().likes));
+    return () => unsub()
+  }, [id])
+
+  const like = () => {
+    const postRef = doc(database, 'posts', id);
+    
+    if (likes.includes(currentUser.displayName)) setDoc(postRef, { likes: likes.filter(user => user !== currentUser.displayName) }, { merge: true });
+    else setDoc(postRef, { likes: [...likes, currentUser.displayName] }, { merge: true });
+  }
+
   return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${className}`} viewBox="0 0 20 20" fill="currentColor">
-      <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-    </svg>
-  )
-}
-
-export const Dislike = ({className}) => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${className}`} viewBox="0 0 20 20" fill="currentColor">
-      <path d="M18 9.5a1.5 1.5 0 11-3 0v-6a1.5 1.5 0 013 0v6zM14 9.667v-5.43a2 2 0 00-1.105-1.79l-.05-.025A4 4 0 0011.055 2H5.64a2 2 0 00-1.962 1.608l-1.2 6A2 2 0 004.44 12H8v4a2 2 0 002 2 1 1 0 001-1v-.667a4 4 0 01.8-2.4l1.4-1.866a4 4 0 00.8-2.4z" />
-    </svg>
-  )
-}
-
-
-const Likes = ({className, likes}) => {
-  return (
-    <div className={`${className} flex flex-row gap-3 justify-center items-center text-black bg-white px-4 py-2 rounded-full`}>
-      {Object.values(likes).filter(i => i).length} <HiThumbUp className={'hover:text-emerald-600 hover:scale-125 transition duration-200'} />
-      {Object.values(likes).filter(i => !i).length} <HiThumbDown className={'hover:text-red-600 hover:scale-125 transition duration-200'} />
+    <div className={`flex flex-row justify-center items-center rounded-lg w-20 h-7 ${className}`}>
+      <button onClick={like} className='bg-teal-500 text-white flex-1 h-full flex justify-center items-center rounded-l-lg'>
+        {likes.includes(currentUser.displayName) ? 
+          <RiHeartFill  /> :
+          <RiHeartLine  />
+        }
+      </button>
+      <div className='bg-white text-teal-600 flex-1 h-full flex justify-center items-center border border-teal-500 rounded-r-lg'>{likes.length}</div>
     </div>
   )
 }

@@ -55,10 +55,7 @@ const Add = () => {
       user: currentUser.displayName,
       title: title.current.value,
       time: dayjs().format(),
-      // type: image.type.split('/')[1],
-      likes: {
-        [currentUser.displayName]: true
-      },
+      likes: [currentUser.displayName],
       tags: tags
       
     });

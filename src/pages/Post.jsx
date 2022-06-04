@@ -60,7 +60,7 @@ const Post = () => {
         
               <div className='w-full flex justify-between items-center'>
                 <div className='text-slate-400 text-lg'>{dayjs(data.time).format('DD-MM-YYYY')}</div>
-                <Likes className='shadow-xl' likes={data.likes} />
+                <Likes className='shadow-xl' id={id} />
               </div>
 
             </div>
