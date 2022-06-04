@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { storage, database } from '../firebase'
 import { getDownloadURL, ref } from 'firebase/storage'
-import { collection, getDocs, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, query, where } from "firebase/firestore";
 
 import Spinner from '../components/Spinner'
 import PostGallery from '../components/PostGallery';
@@ -17,6 +17,7 @@ const Loading = () => (
 const Home = () => {
 
   const {search} = useSearch()
+  const [cap, setCap] = useState(9)
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -30,7 +31,7 @@ const Home = () => {
       setLoading(true)
       setPosts([])
       const ref = collection(database, 'posts')
-      const condition = search ? query(ref, where('tags', 'array-contains', search)) : ref 
+      const condition = search ? query(ref, where('tags', 'array-contains', search)) : query(ref, limit(cap))
       const response = await getDocs(condition)
       console.log(response.size);
       if (!response.size) return setLoading(false)
@@ -44,10 +45,17 @@ const Home = () => {
       setLoading(false)
     }
     fetchPosts()
-  }, [search])
+  }, [search, cap])
   
 
-  return loading ? <Loading /> : <PostGallery posts={posts} />
+  return loading ? <Loading /> : (<>
+    <PostGallery posts={posts} />
+    { posts && posts.length === cap  && (
+      <div className='flex justify-center items-center my-10'>
+        <button onClick={() => setCap(cap+10)} className='border border-teal-500 text-teal-500 hover:bg-teal-500 hover:text-white rounded-full px-4 py-1'>Show more</button>
+      </div>
+    )}
+  </>)
 }
 
 export default Home
