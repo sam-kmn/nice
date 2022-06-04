@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useNavigate } from "react-router-dom"
-import useAuth from '../context/Auth'
+import { useAuth } from '../context/Auth'
 
 import { storage, database } from "../firebase"
 import { ref, uploadBytes } from "firebase/storage"

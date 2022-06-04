@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 
 import {AuthProvider} from './context/Auth'
+import { SearchProvider } from './context/Search';
 import './index.css';
 
 import PrivateRoute from './components/PrivateRoute';
@@ -27,7 +28,10 @@ const Layout = () => {
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
+
     <AuthProvider>
+    <SearchProvider>
+
       <BrowserRouter>
         <Routes>
           
@@ -52,6 +56,9 @@ root.render(
 
         </Routes>
       </BrowserRouter>
+
+    </SearchProvider>
     </AuthProvider>
+    
   </React.StrictMode>
 );

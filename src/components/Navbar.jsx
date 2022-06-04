@@ -1,5 +1,7 @@
 import { NavLink, Link } from "react-router-dom"
-import useAuth from "../context/Auth"
+import { useAuth } from "../context/Auth"
+import { useSearch } from "../context/Search"
+
 import Btn from "./Btn"
 import {HiOutlineUserCircle} from 'react-icons/hi'
 import {CgSearch} from 'react-icons/cg'
@@ -8,6 +10,7 @@ import {IoMdLogOut} from 'react-icons/io'
 
 const Navbar = () => {
   const {currentUser, signOut} = useAuth()
+  const {search, setSearch} = useSearch()
   const activeNavLink = ({isActive}) => isActive ? 'text-green-700': 'text-black'
   
   return (
@@ -27,7 +30,7 @@ const Navbar = () => {
 
       <div className="flex-1 flex justify-center items-center gap-2 bg-zinc-100 h-full px-3 rounded-full">
         <CgSearch className="text-2xl text-gray-500"  />
-        <input type="search" className="flex-1 px-2 mr-4 h-full bg-inherit" placeholder='Search' />
+        <input type="search" value={search} onChange={e => setSearch(e.target.value)} className="flex-1 px-2 mr-4 h-full bg-inherit" placeholder='Search' />
       </div>
 
       

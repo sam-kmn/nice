@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react'
 
 import { storage, database } from '../firebase'
 import { getDownloadURL, ref } from 'firebase/storage'
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 
 import Spinner from '../components/Spinner'
 import PostGallery from '../components/PostGallery';
+import { useSearch } from '../context/Search';
 
 const Loading = () => (
   <div className='h-full flex justify-center items-center'>
@@ -15,6 +16,7 @@ const Loading = () => (
 
 const Home = () => {
 
+  const {search} = useSearch()
   const [posts, setPosts] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -25,9 +27,14 @@ const Home = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const postsResponse = await getDocs(collection(database, 'posts'))
-      if (!postsResponse.size) return console.warn('no posts');
-      postsResponse.forEach(async post => {
+      setLoading(true)
+      setPosts([])
+      const ref = collection(database, 'posts')
+      const condition = search ? query(ref, where('tags', 'array-contains', search)) : ref 
+      const response = await getDocs(condition)
+      console.log(response.size);
+      if (!response.size) return setLoading(false)
+      response.forEach(async post => {
         const url = await fetchURL(post.id)
         setPosts(prev => {
           if (prev.length && prev.find(i => i.url === url)) return [...prev]
@@ -37,7 +44,7 @@ const Home = () => {
       setLoading(false)
     }
     fetchPosts()
-  }, [])
+  }, [search])
   
 
   return loading ? <Loading /> : <PostGallery posts={posts} />

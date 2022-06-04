@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import Btn from '../components/Btn'
-import useAuth from "../context/Auth"
+import { useAuth } from "../context/Auth"
 
 const Register = () => {
 

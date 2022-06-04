@@ -38,10 +38,8 @@ export const AuthProvider = ({children}) => {
     </AuthContext.Provider>)
 }
 
-const useAuth = () => {
+export const useAuth = () => {
   const context = useContext(AuthContext)
   if (context === undefined) throw Error('Context must be used within Provider')
   return context
 }
-
-export default useAuth

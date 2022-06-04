@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import useAuth from '../context/Auth'
+import { useAuth } from '../context/Auth'
 import { database } from '../firebase'
 import { doc, setDoc, onSnapshot} from "firebase/firestore";
 import {RiHeartFill, RiHeartLine} from 'react-icons/ri'

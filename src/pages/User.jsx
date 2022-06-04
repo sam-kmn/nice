@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react"
 import { useParams } from "react-router-dom"
+import { useAuth } from '../context/Auth'
 
 import { storage, database } from '../firebase'
 import { getDownloadURL, ref } from 'firebase/storage'
 import { collection, getDocs, query, where } from "firebase/firestore";
-import PostGallery from "../components/PostGallery";
+
 import Avatar from 'react-avatar'
-import useAuth from '../context/Auth'
 import Spinner from '../components/Spinner'
+import PostGallery from "../components/PostGallery";
 
 const User = () => {
 
