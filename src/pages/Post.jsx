@@ -1,21 +1,45 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
+import { useAuth } from '../context/Auth'
 import { database, storage } from '../firebase'
-import { doc, getDoc } from "firebase/firestore"
+import { doc, getDoc, setDoc, deleteDoc } from "firebase/firestore"
 import { getDownloadURL, ref } from 'firebase/storage'
 
 import dayjs from 'dayjs'
 
 import Likes from '../components/Likes'
 import Spinner from '../components/Spinner'
-
+import {RiEditLine} from 'react-icons/ri'
+import {FiDelete} from 'react-icons/fi'
 
 const Post = () => {
 
   const {id} = useParams()
+  const {currentUser} = useAuth()
   const [data, setData] = useState()
+  const [edit, setEdit] = useState(false)
+  const editRef = useRef()
   const navigate = useNavigate()
+
+  const editPost = async (event) => {
+    event.preventDefault()
+    if(currentUser.displayName !== data.user) return
+    try {
+      const postRef = doc(database, 'posts', id)
+      await setDoc(postRef, {title: editRef.current.value}, { merge: true })
+      setData({...data, title: editRef.current.value})
+      setEdit(false)
+    } catch (error) {
+      alert(error)
+    }
+  }
+
+  const deletePost = async () => {
+    if(currentUser.displayName !== data.user) return
+    await deleteDoc(doc(database, "posts", id));
+    navigate('/', {replace: true})
+  }
 
   const fetchURL = async (id) => {
     const postRef = ref(storage, 'images/'+id)
@@ -46,7 +70,13 @@ const Post = () => {
 
             <div className="p-4 w-full flex flex-col justify-between">
               <div>
-                <div className='text-2xl lg:text-3xl'>{data.title}</div>
+                <form onSubmit={editPost} className="flex flex-row items-center justify-between">
+                  { edit ? <input type="text" ref={editRef} className='text-2xl lg:text-3xl w-56' /> : <div className='text-2xl lg:text-3xl'>{data.title}</div>}
+                  { currentUser.displayName === data.user && (<div className='flex flex-row items-center text-xl gap-4'>
+                    <RiEditLine onClick={() => setEdit(!edit)} className={`${edit ? 'text-teal-600':'text-black'} cursor-pointer`} />
+                    <FiDelete onClick={deletePost} className='text-red-500 cursor-pointer' />
+                  </div>)}
+                </form>
                 <div>Uploaded by <Link to={'/u/'+data.user} className='font-semibold text-teal-500'>{data.user}</Link></div>
               
               { data.tags && (
