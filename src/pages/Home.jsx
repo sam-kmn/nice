@@ -33,7 +33,6 @@ const Home = () => {
       const ref = collection(database, 'posts')
       const condition = search ? query(ref, where('tags', 'array-contains', search)) : query(ref, limit(cap))
       const response = await getDocs(condition)
-      console.log(response.size);
       if (!response.size) return setLoading(false)
       response.forEach(async post => {
         const url = await fetchURL(post.id)

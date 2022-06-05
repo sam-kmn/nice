@@ -15,6 +15,7 @@ const Likes = ({className, id}) => {
   }, [id])
 
   const like = () => {
+    if (!currentUser) return
     const postRef = doc(database, 'posts', id);
     
     if (likes.includes(currentUser.displayName)) setDoc(postRef, { likes: likes.filter(user => user !== currentUser.displayName) }, { merge: true });
@@ -24,7 +25,7 @@ const Likes = ({className, id}) => {
   return (
     <div className={`flex flex-row justify-center items-center rounded-lg w-20 h-7 ${className}`}>
       <button onClick={like} className='bg-teal-500 text-white flex-1 h-full flex justify-center items-center rounded-l-lg'>
-        {likes.includes(currentUser.displayName) ? 
+        {currentUser && likes.includes(currentUser.displayName) ? 
           <RiHeartFill  /> :
           <RiHeartLine  />
         }

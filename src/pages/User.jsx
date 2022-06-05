@@ -24,7 +24,6 @@ const User = () => {
 
   useEffect(() => {
     const fetchPosts = async () => {
-      console.count('fetchPosts', uid);
       const postsResponse = await getDocs(query(collection(database, 'posts'), where("user", '==', uid)))
       if (!postsResponse.size) return console.warn('no posts');
       postsResponse.forEach(async post => {
